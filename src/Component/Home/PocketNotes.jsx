@@ -120,7 +120,7 @@ const PocketNotes = () => {
   return (
     <>
       <div className="main-container">
-        <div className="sub-container">
+        <div className="sub-containertt">
           <div className="left-container">
             <p>Pocket Notes</p>
             <div className="create-notes-container">
