@@ -13,8 +13,6 @@ const PocketNotes = () => {
   const [groups, setGroups] = useState([]);
   const [notesData, setNotesData] = useState([]);
   const [textareaValue, setTextareaValue] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
 
   const closeModal = () => setModal(false);
 
@@ -44,7 +42,10 @@ const PocketNotes = () => {
       setNotesData(updatedNotesData);
       setTextareaValue("");
 
-      localStorage.setItem(`notes-${selectedNoteName}`, JSON.stringify(updatedNotesData));
+      localStorage.setItem(
+        `notes-${selectedNoteName}`,
+        JSON.stringify(updatedNotesData)
+      );
     }
   };
 
@@ -55,7 +56,9 @@ const PocketNotes = () => {
     }
 
     if (selectedNoteName) {
-      const storedNotes = JSON.parse(localStorage.getItem(`notes-${selectedNoteName}`));
+      const storedNotes = JSON.parse(
+        localStorage.getItem(`notes-${selectedNoteName}`)
+      );
       if (storedNotes) {
         setNotesData(storedNotes);
       }
@@ -106,21 +109,18 @@ const PocketNotes = () => {
   };
 
   const handleEnterImageClick = () => {
-    const enterKeyPressEvent = new KeyboardEvent("keydown", {
+    const customEvent = {
       key: "Enter",
-    });
-
-    const textareaElement = document.querySelector(".footer-container textarea");
-
-    if (textareaElement) {
-      textareaElement.dispatchEvent(enterKeyPressEvent);
-    }
+      target: { value: textareaValue },
+    };
+    handleEnterPress(customEvent);
+    setTextareaValue("");
   };
 
   return (
     <>
       <div className="main-container">
-        <div className="sub-containertt">
+        <div className="sub-container">
           <div className="left-container">
             <p>Pocket Notes</p>
             <div className="create-notes-container">
@@ -134,13 +134,24 @@ const PocketNotes = () => {
             <div className="slide-group">
               {groups.map((note, index) => (
                 <div key={index}>
-                  <span
-                    className="icon"
-                    style={{ backgroundColor: note.backgroundColor }}
+                  <div
+                    className="notes-details"
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        note.name === selectedNoteName
+                          ? "#F7ECDC"
+                          : "transparent",
+                    }}
                   >
-                    {note.icon}
-                  </span>
-                  <p onClick={() => handleNoteName(note.name)}>{note.name}</p>
+                    <span
+                      className="icon"
+                      style={{ backgroundColor: note.backgroundColor }}
+                    >
+                      {note.icon}
+                    </span>
+                    <p onClick={() => handleNoteName(note.name)}>{note.name}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -186,7 +197,7 @@ const PocketNotes = () => {
                           <textarea
                             type="text"
                             placeholder="Enter your text here............"
-                            onKeyPress={handleEnterPress}
+                            onKeyDown={handleEnterPress}
                             value={textareaValue}
                             onChange={(e) => setTextareaValue(e.target.value)}
                           />
